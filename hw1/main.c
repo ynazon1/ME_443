@@ -5,7 +5,7 @@
 #pragma config DEBUG = 0b11 // no debugging
 #pragma config JTAGEN = 0 // no jtag
 #pragma config ICESEL = 0b11 // use PGED1 and PGEC1
-#pragma config PWP = 0xFF // no write protect
+#pragma config PWP = 0x3F // no write protect
 #pragma config BWP = 0 // no boot write protect
 #pragma config CP = 1 // no code protect
 
@@ -54,12 +54,34 @@ int main() {
     DDPCONbits.JTAGEN = 0;
     
     // do your TRIS and LAT commands here
+    TRISAbits.TRISA4=0;
+    TRISB=0b0010;
+    LATAbits.LATA4=1;
+    //RPB4=0010;
+    _CP0_SET_COUNT(0);
     
     __builtin_enable_interrupts();
     
     while(1) {
 	    // use _CP0_SET_COUNT(0) and _CP0_GET_COUNT() to test the PIC timing
 		// remember the core timer runs at half the CPU speed
+        
+ 
+        //LATAbits.LATA4=1;
+        if(_CP0_GET_COUNT()==4000)
+        {  
+            LATAbits.LATA4=!LATAbits.LATA4;
+            _CP0_SET_COUNT(0);
+        }
+        
+        if (PORTBbits.RB4==0)
+        {
+            LATAbits.LATA4=0; //Turn off LED
+        }
+        else
+        {
+            LATAbits.LATA4=1; //Turn LED back on
+        }
     }
     
     
