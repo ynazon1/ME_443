@@ -41,11 +41,19 @@
 int main()
 {
 	/* code */
+    unsigned char volt = 200;
+    unsigned char channel = 0; // 0 is for using VoutA; 1 is for using VoutB
+    int i,j;
 	spi_init();
-	setVoltage(1,255);
-	for (int i = 0; i < count; ++i)
-	{
-		/* code */
-	}
+    while (1)
+    {
+        CS1 = 0;
+        for (i=0;i<10000;++i)
+        {;}
+        CS1 = 1;
+        for (j=0;j<10000;++j)
+        {;}
+	    //setVoltage(channel,volt);
+    }
 	return 0;
 }
