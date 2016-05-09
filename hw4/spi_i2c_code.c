@@ -4,7 +4,9 @@
 #include "spi_lib.h"
 #include "spi_lib.c"
 
-#pragma config DEBUG = OFF // no debugging
+//#define CS1 LATBbits.LATB7
+
+/*#pragma config DEBUG = OFF // no debugging
 #pragma config JTAGEN = OFF // no jtag
 #pragma config ICESEL = ICS_PGx1 // use PGED1 and PGEC1
 #pragma config PWP = OFF // no write protect
@@ -36,24 +38,29 @@
 #pragma config PMDL1WAY = OFF // allow multiple reconfigurations
 #pragma config IOL1WAY = OFF // allow multiple reconfigurations
 #pragma config FUSBIDIO = ON // USB pins controlled by USB module
-#pragma config FVBUSONIO = ON // USB BUSON controlled by USB module
+#pragma config FVBUSONIO = ON // USB BUSON controlled by USB module */
 
 int main()
 {
 	/* code */
-    unsigned char volt = 200;
-    unsigned char channel = 0; // 0 is for using VoutA; 1 is for using VoutB
+    char volt = 100;
+    char channel = 0; // 0 is for using VoutA; 1 is for using VoutB
     int i,j;
 	spi_init();
+    //TRISBbits.TRISB7 = 0;
+    //setVoltage(channel,volt);
     while (1)
     {
-        CS1 = 0;
-        for (i=0;i<10000;++i)
+        /*CS1 = 0;
+        for (i=0;i<100000;++i)
         {;}
         CS1 = 1;
-        for (j=0;j<10000;++j)
-        {;}
-	    //setVoltage(channel,volt);
+        for (j=0;j<100000;++j)
+        {;}*/
+	    setVoltage(channel,volt);
+        //_CP0_SET_COUNT(0);                // set core timer counter to 0
+        //while(_CP0_GET_COUNT()<10000)
+        //    {;}
     }
 	return 0;
 }
