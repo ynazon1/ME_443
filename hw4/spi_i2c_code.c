@@ -43,7 +43,7 @@
 int main()
 {
 	/* code */
-    char volt = 100;
+    char volt = -1;
     char channel = 0; // 0 is for using VoutA; 1 is for using VoutB
     int i,j;
 	spi_init();

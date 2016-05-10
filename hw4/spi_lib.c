@@ -98,19 +98,25 @@ unsigned char spi_read()
 
 void setVoltage(char channel, char voltage)
 {
-	unsigned char first_8,second_8;
+	unsigned char first_8,second_8,unsign_channel,unsign_voltage,volt;
+    //char volt;
     short int full_16_bars;
+    
+    unsign_channel = (unsigned) channel;
+    unsign_voltage = (unsigned) voltage;
+    volt = unsign_voltage;
     //TRISBbits.TRISB7 = 0; // Make RB7 pin an output (the chip select pin) (RB7 is pin 16)
 	//RPB7Rbits.RPB7R = 0b0011; //RB7 is SS1 for now....
     //TRISBbits.TRISB14 = 0;
 	//SDI1Rbits.SDI1R = 0b0100; //RB8 is SDI1 for now.... (RB8 is pin 17)
 	//RPB13Rbits.RPB13R = 0b0011; //RB13 (SDO1 pin) for now.... (RB13 is pin 24)
     CS = 0;
-    full_16_bars=0x7700;
-	first_8=0x7A;
-    second_8=0x00;
-	//first_8= (channel<<7) | (voltage>>4);
-	//second_8=(voltage<<4);
+    //full_16_bars=0x7700;
+	//first_8=0x70;
+    //second_8=0x00;
+	first_8= 0x70 | (unsign_channel<<7); 
+    first_8= first_8 | (unsign_voltage>>4);
+	second_8=(volt<<4);
 	spi_io(first_8);
 	spi_io(second_8);
     //spi_io(full_16_bars);
