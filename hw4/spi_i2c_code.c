@@ -1,7 +1,12 @@
 #include <xc.h>           // processor SFR definitions
+#include <stdio.h>
 #include <sys/attribs.h>  // __ISR macro
+#include "spi_lib.h"
+#include "spi_lib.c"
 
-#pragma config DEBUG = OFF // no debugging
+//#define CS1 LATBbits.LATB7
+
+/*#pragma config DEBUG = OFF // no debugging
 #pragma config JTAGEN = OFF // no jtag
 #pragma config ICESEL = ICS_PGx1 // use PGED1 and PGEC1
 #pragma config PWP = OFF // no write protect
@@ -33,55 +38,29 @@
 #pragma config PMDL1WAY = OFF // allow multiple reconfigurations
 #pragma config IOL1WAY = OFF // allow multiple reconfigurations
 #pragma config FUSBIDIO = ON // USB pins controlled by USB module
-#pragma config FVBUSONIO = ON // USB BUSON controlled by USB module
+#pragma config FVBUSONIO = ON // USB BUSON controlled by USB module */
 
-
-int main() {
-
-    __builtin_disable_interrupts();
-
-    // set the CP0 CONFIG register to indicate that kseg0 is cacheable (0x3)
-    __builtin_mtc0(_CP0_CONFIG, _CP0_CONFIG_SELECT, 0xa4210583);
-
-    // 0 data RAM access wait states
-    BMXCONbits.BMXWSDRM = 0x0;
-
-    // enable multi vector interrupts
-    INTCONbits.MVEC = 0x1;
-
-    // disable JTAG to get pins back
-    DDPCONbits.JTAGEN = 0;
-    
-    // do your TRIS and LAT commands here
-    TRISAbits.TRISA4=0;
-    TRISB=0b0010;
-    LATAbits.LATA4=1;
-    //RPB4=0010;
-    _CP0_SET_COUNT(0);
-    
-    __builtin_enable_interrupts();
-    
-    while(1) {
-	    // use _CP0_SET_COUNT(0) and _CP0_GET_COUNT() to test the PIC timing
-		// remember the core timer runs at half the CPU speed
-        
- 
-        //LATAbits.LATA4=1;
-        if(_CP0_GET_COUNT()==4000)
-        {  
-            LATAbits.LATA4=!LATAbits.LATA4;
-            _CP0_SET_COUNT(0);
-        }
-        
-        if (PORTBbits.RB4==0)
-        {
-            LATAbits.LATA4=0; //Turn off LED
-        }
-        else
-        {
-            LATAbits.LATA4=1; //Turn LED back on
-        }
+int main()
+{
+	/* code */
+    char volt = -1;
+    char channel = 0; // 0 is for using VoutA; 1 is for using VoutB
+    int i,j;
+	spi_init();
+    //TRISBbits.TRISB7 = 0;
+    //setVoltage(channel,volt);
+    while (1)
+    {
+        /*CS1 = 0;
+        for (i=0;i<100000;++i)
+        {;}
+        CS1 = 1;
+        for (j=0;j<100000;++j)
+        {;}*/
+	    setVoltage(channel,volt);
+        //_CP0_SET_COUNT(0);                // set core timer counter to 0
+        //while(_CP0_GET_COUNT()<10000)
+        //    {;}
     }
-    
-    
+	return 0;
 }
